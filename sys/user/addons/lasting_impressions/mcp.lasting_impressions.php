@@ -42,7 +42,7 @@ class Lasting_impressions_mcp {
         $this->_dbSettings = ee('Model')->make('lasting_impressions:Settings');
     }
     $this->_settings = array('limit' => 15, 'enabled' => 0, 'expires' => 30);
-    $this->_page_config['per_page'] = 5;
+    $this->_page_config['per_page'] = 25;
     $this->_page_config['enable_query_strings'] = TRUE;
     $this->_page_config['page_query_string'] = TRUE;
   }
@@ -59,6 +59,7 @@ class Lasting_impressions_mcp {
       $this->getSettingsFromDB();
     }
     $vars = $this->displaySettings();
+    $vars[ 'package'] = LiConfig::getConfig()['package'];
     return $this->_load_view("mcp_index", $vars, LiConfig::getConfig()['name'], lang('breadcrumb_settings'));
   }
   

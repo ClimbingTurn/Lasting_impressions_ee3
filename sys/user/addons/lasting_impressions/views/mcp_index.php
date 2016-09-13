@@ -48,4 +48,5 @@ else:
     <p><?php print lang('no_settings') ?></p>
 
 <?php endif; ?>
-    
+
+<?php include PATH_THIRD . 'lasting_impressions' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'mcp_footer.php'; ?>

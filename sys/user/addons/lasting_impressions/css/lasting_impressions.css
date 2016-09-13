@@ -90,3 +90,8 @@ label {
 code {
 	font-weight: bold;
 }
+
+.purge-button {
+	float: right;
+	margin-top: 10px;
+}

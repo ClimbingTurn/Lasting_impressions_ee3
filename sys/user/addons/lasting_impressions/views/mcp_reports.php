@@ -19,7 +19,7 @@
 
             <input type="button" value="<?php print lang('export_csv_label') ?>" id="export-button" class="submit" name="export-button" title="<?php print lang('export_csv_title') ?>">
             <input type="hidden" value="<?php echo $partial_url."&method=". $method ?>" id="export-type" title="<?php print lang('purge_info') ?>"/>
-            <input type="button" value="<?php echo lang('purge_label') ?>" id="purge-button" class="submit" title="<?php echo lang('purge_title') ?>">
+            <input type="button" value="<?php echo lang('purge_label') ?>" id="purge-button" class="submit purge-button" title="<?php echo lang('purge_title') ?>">
             <input type="hidden" value="<?php echo $partial_url."&method=purge_data_all" ?>" id="purge"/>
             <input type="hidden" value="<?php print lang('purge_message') ?>" id="purge-message"/>
     </div>
@@ -45,10 +45,4 @@
 <?php endif;?>
 
 
-<div class="cp-footer">
-
-    <p><a href="<?php print $docs ?>" target="_blank" title="Documentation"><img src="<?php print URL_THIRD_THEMES ?><?php print $package ?>/assets/lasting-impressions-pro.jpg" title="<?php print lang('lasting_impressions_module_name') ?>" alt="<?php print lang('lasting_impressions_module_name') ?>"></a></p>
-
-    <p><?php echo lang('find_docs_at') ?> <a href="<?php print $docs ?>" target="_blank" title="Documentation"><?php print $docs ?></a></p>
-
-</div>
+<?php include PATH_THIRD . 'lasting_impressions' . DIRECTORY_SEPARATOR . 'views' . DIRECTORY_SEPARATOR . 'mcp_footer.php'; ?>

@@ -9,11 +9,11 @@ use ClimbingTurn\LastingImpressions\libraries\Config as LiConfig;
  *
  * @package     lasting_impressions
  * @author      Dorothy Molloy / Anthony Mellor
- * @link 		http://www.climbingturn.co.uk/software/lasting-impressions-pro
- * @copyright 	Copyright (c) 2016, Climbing Turn Ltd
+ * @link    http://www.climbingturn.co.uk/software/lasting-impressions-pro
+ * @copyright   Copyright (c) 2016, Climbing Turn Ltd
  *
  *  This file is part of lasting_impressions.
- *	Requires ExpressionEngine 3.0.0 or above
+ *  Requires ExpressionEngine 3.0.0 or above
  */
 class DataHelper {
     
@@ -29,15 +29,15 @@ public function get_all_recorded_data($group_by) {
   
   private function _get_lasting_impressions_data($group_by){
       if ($group_by) {
-          ee()->db->select("count(*) as total, d.entry_id, t.title, t.site_id, t.channel_id, d.member_id, d.session_id, d.ip_address, d.user_agent, d.entry_date")
+          ee()->db->select("count(*) as num_views, d.entry_id, t.title, t.site_id, t.channel_id")
               ->from(LiConfig::getConfig()['data_table']  . ' d')
               ->join('channel_titles t', 'd.entry_id = t.entry_id', 'inner') 
               ->group_by('d.entry_id')
-              ->order_by('total', 'DESC');
+              ->order_by('num_views', 'DESC');
       } else {
       ee()->db->select("d.entry_id, t.title,  t.site_id, t.channel_id, d.member_id, d.session_id, d.ip_address, d.user_agent, d.entry_date")
               ->from(LiConfig::getConfig()['data_table']  . ' d')
-             	->join('channel_titles t', 'd.entry_id = t.entry_id', 'inner')
+              ->join('channel_titles t', 'd.entry_id = t.entry_id', 'inner')
               ->order_by('d.entry_id');                   
       }
       $res = ee()->db->get();
@@ -45,7 +45,7 @@ public function get_all_recorded_data($group_by) {
   }
   
   
-	
+  
   public function purge_all_recorded_data() {
         ee()->db->empty_table(LiConfig::getConfig()['data_table'] );
   }
@@ -103,10 +103,11 @@ public function get_all_recorded_data($group_by) {
   }
   
 public function create_totals_table( $limit=25, $current_page) {
-    $table = ee('CP/Table', array( 'sortable' => 'FALSE', 'autosort' => 'TRUE',  'limit' => $limit, 'page' => $current_page));
+    $table = ee('CP/Table', array( 'sortable' => 'TRUE', 'autosort' => 'FALSE',  'limit' => $limit, 'page' => $current_page));
     $table->setColumns(
         array(
-               'total' => array(
+               'num_views' => array(
+                           'label' => 'Num Views',
                            'sort' => 'false',
                            'type' => 'Table::COL_TEXT'
                    ),
@@ -115,7 +116,7 @@ public function create_totals_table( $limit=25, $current_page) {
                            'type' => 'Table::COL_TEXT'
                    ),
                 'title' => array(
-                           'sort' => 'false',
+                           'sort' => 'true',
                            'type' => 'Table::COL_TEXT'
                    ),
                 'site_id' => array(
@@ -125,32 +126,11 @@ public function create_totals_table( $limit=25, $current_page) {
                 'channel_id' => array(
                            'sort' => 'false',
                            'type' => 'Table::COL_TEXT'
-                   ),
-                'member_id' => array(
-                           'sort' => 'false',
-                           'type' => 'Table::COL_TEXT'
-                   ),
-                   'session_id' => array(
-                           'sort' => 'false',
-                           'type' => 'Table::COL_TEXT'
-                   ),
-                'ip_address' => array(
-                           'sort' => 'false',
-                           'type' => 'Table::COL_TEXT'
-                   ),
-                'user_agent' => array(
-                           'sort' => 'false',
-                           'type' => 'Table::COL_TEXT'
-                   ),
-                'entry_date' => array(
-                           'sort' => 'false',
-                           'type' => 'Table::COL_TEXT'
                    )
             )
         );
     $table->setNoResultsText('no_data');
     $stats = $this->get_all_recorded_data(true);
-    $stats = $this->_format_date_field($stats);
     $table->setData($stats);
     return $table;
     }
