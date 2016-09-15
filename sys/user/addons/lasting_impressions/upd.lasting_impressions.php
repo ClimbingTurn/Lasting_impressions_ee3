@@ -77,7 +77,7 @@ public function __construct() {
                 'member_id' => array('type' => 'int', 'constraint' => '10', 'signed' => TRUE),
                 'session_id' => array('type' => 'varchar', 'constraint' => '40', 'null' => FALSE),
                 'ip_address' => array('type' => 'varchar', 'constraint' => '45', 'null' => TRUE),
-                'user_agent' => array('type' => 'varchar', 'constraint' => '120', 'null' => TRUE),
+                'user_agent' => array('type' => 'varchar', 'constraint' => '512', 'null' => TRUE),
                 'entry_date' => array('type' => 'int', 'constraint' => '10', 'unsigned' => TRUE)
             ));	
             ee()->dbforge->add_key('lid_id', TRUE);
