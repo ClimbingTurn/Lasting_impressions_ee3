@@ -209,7 +209,7 @@ class Lasting_impressions extends Channel {
 			if (($load_jquery == "true") || ($load_jquery == "yes")) {
 				$line .= '<script type="text/javascript" src="' . $path . $this->jquery_file_name .'"></script>' . PHP_EOL;
 			}
-			$line .= '<script type="text/javascript" src="' . $path . LiConfig::getConfig()['package'] . '.js"></script>' . PHP_EOL;
+			$line .= '<script type="text/javascript" src="' . $path . LiConfig::getConfig()['package'] . '.min.js"></script>' . PHP_EOL;
 			return $line;
 		}
 	}
