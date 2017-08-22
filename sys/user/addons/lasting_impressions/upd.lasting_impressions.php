@@ -187,13 +187,12 @@ public function __construct() {
 	
 	public function update($current = '') 
 	{	
-
-		if ($current == '' || version_compare($current, $this->version) === 0)
+		if (! version_compare($current, $this->version, '='))
 		{
 			return FALSE;
 		} elseif ((defined(LiConfig::getConfig()['has_datatable_version']) == false) ||
-				   version_compare($current, LiConfig::getConfig()['has_datatable_version']) >= 0 ) {
-					//LiConfig::getConfig()['has_datatable_version'] is the version where we started using the data table, any versions beyond this will already have that table installed
+		   version_compare($current, LiConfig::getConfig()['has_datatable_version']) >= 0 ) {
+			//LiConfig::getConfig()['has_datatable_version'] is the version where we started using the data table, any versions beyond this will already have that table installed
 			$data_created = true;
 
 		} else {

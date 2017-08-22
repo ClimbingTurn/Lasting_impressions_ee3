@@ -49,8 +49,8 @@ class Lasting_impressions_entries {
           $entries[] = $new_entry;
           unset($entries[$key]);
         }
-        $this->_store_data_to_cookie($entries);
-        return;
+        $cookieset = $this->_store_data_to_cookie($entries);
+        return $cookieset;
       }
     }
 
@@ -60,7 +60,8 @@ class Lasting_impressions_entries {
 
     $entries[] = $new_entry;
     $this->entries = $entries;
-    $this->_store_data_to_cookie($entries);
+    $cookieset = $this->_store_data_to_cookie($entries);
+    return $cookieset;
   }
 
   public function record($entry_id) {
@@ -108,7 +109,8 @@ class Lasting_impressions_entries {
     }
   }
 
-  $this->_store_data_to_cookie($entries);
+  $cookieset = $this->_store_data_to_cookie($entries);
+  return $cookieset;
 }
 
 
@@ -133,21 +135,20 @@ class Lasting_impressions_entries {
 
   private function _get_data_from_cookie()
   {
-    if($this->entries === NULL)
+    ee()->load->library('logger');
+    if($this->entries === NULL || $this->entries == '')
     {
-     $entry_data = ee()->input->cookie(LiConfig::getConfig()['package'], TRUE);	
+      $entry_data = ee()->input->cookie(LiConfig::getConfig()['package'], TRUE);  
 
-     if($entry_data == '')
-     {
+      if($entry_data == '')
+      {
        $entry_data = array();
-     }
-     else
-     {
-      $entry_data = unserialize(base64_decode($entry_data));
-    }
+      } else  {
+        $entry_data = unserialize(base64_decode($entry_data));
+      }
 
-			$this->entries = $entry_data; // cache it
-			return $entry_data;
+      $this->entries = $entry_data; // cache it
+      return $entry_data;
 		}
 		else
 		{
@@ -172,7 +173,8 @@ class Lasting_impressions_entries {
 			$prefix = "exp_";
 		}
 
-		setcookie($prefix . LiConfig::getConfig()['package'], $entry_data, time()+3600*24 * $expires, '/', '', FALSE);
+    $cookieset = setcookie($prefix . LiConfig::getConfig()['package'], $entry_data, time()+3600*24 * $expires, '/', '', FALSE);
+    return $cookieset;
 	}	
 
 

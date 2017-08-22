@@ -37,7 +37,7 @@ class Lasting_impressions extends Channel {
     ee()->load->library('lasting_impressions_entries');
     $this->action_id_tag  = ee()->functions->fetch_action_id(LiConfig::getConfig()['package'], 'remove_item_from_cookie');
     $this->action_id = ee()->db->where(array('class' => __CLASS__, 'method' => 'remove_item_from_cookie'))->get('actions')->row('action_id'); 
-    $this->enabled = $this->_dbSettings->enabled;
+    $this->enabled = $this->_dbSettings->enabled;  
   }
 
 
@@ -56,7 +56,10 @@ class Lasting_impressions extends Channel {
       {
         return;
       }
-      ee()->lasting_impressions_entries->add($entry_id, $make_revisits_most_recent);
+      $entry_added = ee()->lasting_impressions_entries->add($entry_id, $make_revisits_most_recent);
+      if (!$entry_added) {
+        ee()->logger->developer(LiConfig::getConfig()['package'] . " Failed to set Cookie");
+      }
       if ($record_analytics == "yes") {
         $res = ee()->lasting_impressions_entries->record($entry_id);
         if ($res > 0) {
@@ -84,7 +87,7 @@ class Lasting_impressions extends Channel {
       $entries = ee()->lasting_impressions_entries->get();
       if(count($entries) > 0)
       {
-        $this->parse_tag_data($entries, $status, $channel, $display_order);
+        $this->parse_tag_data($entries, $status, $channel, $display_order);     
         return parent::entries();
       }
       return $this->return_no_results();
@@ -115,8 +118,7 @@ class Lasting_impressions extends Channel {
       $listing_template = ee()->TMPL->fetch_param('listing_template', FALSE);
       $parent_tag_id = ee()->TMPL->fetch_param('parent_tag_id', FALSE);
       $use_html5 = ee()->TMPL->fetch_param('use_html5') == 'yes' ? TRUE : FALSE;
-
-
+      
       if(count($entries) > 0)
       {
 
@@ -248,7 +250,7 @@ public function count()    {
     ee()->TMPL->tagparams['dynamic'] = 'no';
     ee()->TMPL->tagparams['status'] = $status;
     ee()->TMPL->tagparams['channel'] = $channel;
-    ee()->TMPL->tagparams['fixed_order'] = $ordered_ids;
+    ee()->TMPL->tagparams['fixed_order'] = $ordered_ids;   
   }
 
 
