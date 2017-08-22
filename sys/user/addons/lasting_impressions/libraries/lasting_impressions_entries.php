@@ -14,149 +14,137 @@ use ClimbingTurn\LastingImpressions\libraries\Config as LiConfig;
  */
 
 class Lasting_impressions_entries {
-    private static $default_limit = 15;
-    private static $default_expires = 30;
-    private $entries;
-    private $_dbSettings;
+  private static $default_limit = 15;
+  private static $default_expires = 30;
+  private $entries;
+  private $_dbSettings;
 
-    function __construct()
+  function __construct()
+  {
+    $this->_dbSettings = ee('Model')->get('lasting_impressions:Settings')->first(); 
+    $this->entries = $this->_get_data_from_cookie();
+  }
+
+	// ------------------------------------------------------------------------------
+
+  public function add($entry_id, $make_revisits_most_recent)
+  {
+    $entries = $this->_get_data_from_cookie();
+
+    $limit = $this->_get_limit();
+    if (count($entries) >= $limit) 
     {
-                $this->_dbSettings = ee('Model')->get('lasting_impressions:Settings')->first(); 
-                $this->entries = $this->_get_data_from_cookie();
+      array_shift($entries);
     }
 
-	// ------------------------------------------------------------------------------
+    foreach($entries as $key => & $entry)
+    {
+      if($entry['entry_id'] == $entry_id)
+      {
+        $entry['view_count'] ++;
+        $entry['last_view'] = time();				
+        if($make_revisits_most_recent == "yes")
+        {
+          $new_entry = $entry;
+          $entries[] = $new_entry;
+          unset($entries[$key]);
+        }
+        $this->_store_data_to_cookie($entries);
+        return;
+      }
+    }
 
-	public function add($entry_id, $make_revisits_most_recent)
-	{
-                        $entries = $this->_get_data_from_cookie();
+    $new_entry = array('entry_id' 	=> $entry_id,
+     'view_count'	=> 1,
+     'last_view'	=> time());
 
-                        $limit = $this->_get_limit();
-                        if (count($entries) >= $limit) 
-                        {
-                                array_shift($entries);
-                        }
+    $entries[] = $new_entry;
+    $this->entries = $entries;
+    $this->_store_data_to_cookie($entries);
+  }
 
-                        foreach($entries as $key => & $entry)
-                        {
-                                if($entry['entry_id'] == $entry_id)
-                                {
-                                        $entry['view_count'] ++;
-                                        $entry['last_view'] = time();				
-                                        if($make_revisits_most_recent == "yes")
-                                        {
-                                                $new_entry = $entry;
-                                                $entries[] = $new_entry;
-                                                unset($entries[$key]);
-                                        }
-                                        $this->_store_data_to_cookie($entries);
-                                        return;
-                                }
-                        }
+  public function record($entry_id) {
+    $ip_address = ee()->input->ip_address();
+    $user_agent = ee()->input->user_agent();
+    $time_logged = time();
 
-                        $new_entry = array('entry_id' 	=> $entry_id,
-                                                   'view_count'	=> 1,
-                                                   'last_view'	=> time());
+    if(session_id() == "") {
+      session_start();
+    }
+    $session_id = session_id();
+    $member_id = ee()->session->userdata['member_id'];
+    $data = array(
+      'entry_id' => $entry_id,
+      'member_id' => $member_id,
+      'session_id' => $session_id,
+      'ip_address' => $ip_address,
+      'user_agent' => $user_agent,
+      'entry_date' => $time_logged);
 
-                        $entries[] = $new_entry;
-                        $this->entries = $entries;
-                        $this->_store_data_to_cookie($entries);
-	}
+    $res = $this->_save_to_data_table($data);
+    return $res;
+  }
 
-	public function record($entry_id) {
-                        $ip_address = ee()->input->ip_address();
-                        $user_agent = ee()->input->user_agent();
-                        $time_logged = time();
-
-                        if(session_id() == "") {
-                            session_start();
-                        }
-                        $session_id = session_id();
-                        $member_id = ee()->session->userdata['member_id'];
-                        $data = array(
-                                'entry_id' => $entry_id,
-                                'member_id' => $member_id,
-                                'session_id' => $session_id,
-                                'ip_address' => $ip_address,
-                                'user_agent' => $user_agent,
-                                'entry_date' => $time_logged);
-
-                        $res = $this->_save_to_data_table($data);
-                        return $res;
-	}
-        
-                private function _save_to_data_table($viewed_data){
-                        $insert_query = ee()->db->insert(LiConfig::getConfig()['data_table'], $viewed_data);
-                        return ee()->db->_error_number();
-                }
+  private function _save_to_data_table($viewed_data){
+    $insert_query = ee()->db->insert(LiConfig::getConfig()['data_table'], $viewed_data);
+    return ee()->db->_error_number();
+  }
 
 
 	// ------------------------------------------------------------------------------
 
 
-	public function delete($entry_id)
-	{
+  public function delete($entry_id)
+  {
 
-		$entries = $this->_get_data_from_cookie();
+    $entries = $this->_get_data_from_cookie();
 
-		foreach ($entries as $key => $entry) 
-		{
-			if($entry['entry_id'] == $entry_id)	
-			{
-				unset($entries[$key]);
-				break;
-			}
-		}
+    foreach ($entries as $key => $entry) 
+    {
+     if($entry['entry_id'] == $entry_id)	
+     {
+      unset($entries[$key]);
+      break;
+    }
+  }
 
-		$this->_store_data_to_cookie($entries);
-	}
-
-
-	// ------------------------------------------------------------------------------
+  $this->_store_data_to_cookie($entries);
+}
 
 
-	public function get()
-	{
-		return $this->_get_data_from_cookie();
-	}
+  public function get()
+  {
+    return $this->_get_data_from_cookie();
+  }
 
 
 
-
-	// ------------------------------------------------------------------------------
-
-
-                   /*
-                    * This counts the number of entries in the cookie.  Useful for detecting whether or not 
-                    * you wish to display any lasting impressions to the user
-                    */
-	public function count()
-	{
-		$entries = $this->_get_data_from_cookie();
-		return count($entries);
-	}
+   /*
+    * This counts the number of entries in the cookie.  Useful for detecting whether or not 
+    * you wish to display any lasting impressions to the user
+    */
+   public function count()
+   {
+    $entries = $this->_get_data_from_cookie();
+    return count($entries);
+  }
 
 
 
-	// ------------------------------------------------------------------------------
+  private function _get_data_from_cookie()
+  {
+    if($this->entries === NULL)
+    {
+     $entry_data = ee()->input->cookie(LiConfig::getConfig()['package'], TRUE);	
 
-
-
-	private function _get_data_from_cookie()
-	{
-
-		if($this->entries === NULL)
-		{
-			$entry_data = ee()->input->cookie(LiConfig::getConfig()['package'], TRUE);	
-	
-			if($entry_data == '')
-			{
-				 $entry_data = array();
-			}
-			else
-			{
-				$entry_data = unserialize(base64_decode($entry_data));
-			}
+     if($entry_data == '')
+     {
+       $entry_data = array();
+     }
+     else
+     {
+      $entry_data = unserialize(base64_decode($entry_data));
+    }
 
 			$this->entries = $entry_data; // cache it
 			return $entry_data;
@@ -167,9 +155,6 @@ class Lasting_impressions_entries {
 		}
 	}	
 
-
-
-	// ------------------------------------------------------------------------------
 
 
 
@@ -193,10 +178,6 @@ class Lasting_impressions_entries {
 
 
 
-	// ------------------------------------------------------------------------------
-
-
-
 	private function _get_limit()
 	{
 		$tmp_limit = $this->_dbSettings->limit;
@@ -210,9 +191,6 @@ class Lasting_impressions_entries {
 		}
 		return $limit;
 	}
-
-
-	// ------------------------------------------------------------------------------
 
 	
 
