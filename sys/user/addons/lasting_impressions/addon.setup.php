@@ -4,10 +4,11 @@
  * @package     lasting_impressions
  * @author      Dorothy Molloy / Anthony Mellor
  * @link 		http://www.climbingturn.co.uk/software/lasting-impressions-pro
- * @copyright 	Copyright (c) 2016, Climbing Turn Ltd
+ * @copyright 	Copyright (c) 2017, Climbing Turn Ltd
  *
  *  This file is part of lasting_impressions.
  *	Requires ExpressionEngine 3.0.0 or above
+ *  ExpressionEngine 4 compliant
  */
 
 
