@@ -11,8 +11,8 @@ namespace ClimbingTurn\LastingImpressions\Model;
  *
  * @package     lasting_impressions
  * @author      Dorothy Molloy / Anthony Mellor
- * @link 		http://www.climbingturn.co.uk/software/lasting-impressions-pro
- * @copyright 	Copyright (c) 2016, Climbing Turn Ltd
+ * @link 		https://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions-for-eecms-v3
+ * @copyright 	Copyright (c) 2019, Climbing Turn Ltd
  *
  *  This file is part of lasting_impressions.
  *	Requires ExpressionEngine 3.0.0 or above

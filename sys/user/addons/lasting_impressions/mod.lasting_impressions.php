@@ -8,8 +8,8 @@ use ClimbingTurn\LastingImpressions\libraries\Config as LiConfig;
  *
  * @package     lasting_impressions
  * @author      Dorothy Molloy & Anthony Mellor
- * @link 		http://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions-pro
- * @copyright 	Copyright (c) 2016, Climbing Turn Ltd
+ * @link 		    http://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions
+ * @copyright 	Copyright (c) 2019, Climbing Turn Ltd
  * 
  *  This file is part of lasting_impressions.
  *	Requires ExpressionEngine 3.0.0 or above
@@ -78,9 +78,9 @@ class Lasting_impressions extends Channel {
 	{
     if ($this->enabled)   {
 
-                            // values = recent (most recent first) or regsiter (order in which they were visited)
+      // values = recent (most recent first) or regsiter (order in which they were visited)
       $display_order = ee()->TMPL->fetch_param('display_order', 'recent');
-                            // standard EE channel parameters
+      // standard EE channel parameters
       $status = ee()->TMPL->fetch_param('status', 'open');
       $channel = ee()->TMPL->fetch_param('channel', '');
 

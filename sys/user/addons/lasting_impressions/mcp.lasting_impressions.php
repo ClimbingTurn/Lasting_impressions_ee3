@@ -16,8 +16,8 @@ use ClimbingTurn\LastingImpressions\libraries\Config as LiConfig;
  *
  * @package     lasting_impressions
  * @author      Dorothy Molloy / Anthony Mellor
- * @link 		http://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions-pro
- * @copyright 	Copyright (c) 2015 / 2016, Climbing Turn Ltd
+ * @link 		    http://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions
+ * @copyright 	Copyright (c) 2019, Climbing Turn Ltd
  * 
  *  This file is part of lasting_impressions.
  *	Requires ExpressionEngine 3.0.0 or above
