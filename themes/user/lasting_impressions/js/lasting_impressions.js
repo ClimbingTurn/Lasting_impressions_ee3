@@ -4,9 +4,9 @@
 *
 *	@package 		lasting_impressions
 *	@author 		Climbing Turn Limited (www.climbingturn.co.uk)
-*	@copyright 		Climbing Turn Limited 2014
+*	@copyright 		Climbing Turn Limited 2019
 *	@version  		2.0
-* 	@link			http://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions-pro
+* 	@link			https://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions-for-eecms-v3
 *	@dependencies	jQuery 1.8+
 *
 */
