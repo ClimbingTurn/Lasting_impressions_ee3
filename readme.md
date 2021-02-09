@@ -15,9 +15,9 @@ The full use guide can be found here:
 [Lasting Impression for EE3 User Guide](https://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions-for-eecms-v3)
 
 ##Compatibility
-Compatible with EE versions	3.0+ and 4.0+
+Compatible with EE versions	3, 4, 5 and 6
 
-Lasting Impressions Version	4.0.0
+Lasting Impressions Version	4.0.2
 
 
 ##Upgrading templates from version 2
