@@ -23,7 +23,7 @@ namespace ClimbingTurn\LastingImpressions\Libraries;
                 'namespace' => 'LastingImpressions',
                 'data_table' => 'lasting_impressions_data',
                 'version' => '4.0.0',
-                'docs' =>  'https://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions-for-eecms-v3',
+                'docs' =>  'https://www.climbingturn.co.uk/software/documentation/lasting-impressions-for-eecms',
 
                 //Versions below LASTING_IMPRESSIONS_HAS_DATATABLE_VERSION need the data table installed
                 'has_datatable_version' => '3.0.0'
