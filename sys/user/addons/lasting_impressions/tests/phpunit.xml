@@ -1,0 +1,10 @@
+<phpunit colors="true" verbose="true" bootstrap="vendor/autoload.php">
+  <testsuites>
+    <testsuite name="LastingImpressions">
+      <directory>./lasting_impressions</directory>
+    </testsuite>
+  </testsuites>
+  <php>
+    <env name="USER_DIR" value="/media/dorothy/Data/websites/Protouree/server/user/" />
+  </php>
+</phpunit>

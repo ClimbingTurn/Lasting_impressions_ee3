@@ -1,4 +1,4 @@
-<?php //
+<?php 
 
 
 if (!defined('BASEPATH'))
@@ -79,7 +79,7 @@ class Lasting_impressions_mcp {
       $header = $sidebar->addHeader('Lasting Impressions');
       $basicList = $header->addBasicList();
       $basicList->addItem("Settings", UrlHelper::getMcpUrl());
-      $basicList->addItem('Reports',UrlHelper::getMcpUrl('report_all'));
+      $basicList->addItem('Reports',UrlHelper::getMcpUrl('&method=groupby_report'));
   }
 
   private function _load_packages() {
@@ -135,12 +135,12 @@ class Lasting_impressions_mcp {
     $current_page = $this->_get_post_or_zero('page') ?: 1;
 
     $data_helper = new DataHelper();
-   $table = $data_helper->create_totals_table($this->_page_config['per_page'], $current_page);
-   $vars['table'] = $table->viewData(ee('CP/URL', lang('lasting_impressions_module_name')));  
+    $table = $data_helper->create_totals_table($this->_page_config['per_page'], $current_page);
+    $vars['table'] = $table->viewData(ee('CP/URL', lang('lasting_impressions_module_name')));  
    
    //Pagination
-   $base_url = UrlHelper::getMcpUrl('groupby_report');
-   $num_items = $table->config['total_rows'];
+    $base_url = UrlHelper::getMcpUrl('groupby_report');
+    $num_items = $table->config['total_rows'];
     $vars['pagination']  = ee('CP/Pagination', $num_items)
                  ->currentPage($current_page)
                 ->perPage($this->_page_config['per_page'])

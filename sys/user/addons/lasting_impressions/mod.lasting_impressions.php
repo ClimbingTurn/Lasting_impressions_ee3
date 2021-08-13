@@ -1,6 +1,7 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php 
 
-require_once(PATH_MOD.'/channel/mod.channel.php');
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
 use ClimbingTurn\LastingImpressions\libraries\Config as LiConfig;
 
 /**
@@ -78,13 +79,14 @@ class Lasting_impressions extends Channel {
 	{
     if ($this->enabled)   {
 
-      // values = recent (most recent first) or regsiter (order in which they were visited)
+      // values = recent (most recent first) or register (order in which they were visited)
       $display_order = ee()->TMPL->fetch_param('display_order', 'recent');
       // standard EE channel parameters
       $status = ee()->TMPL->fetch_param('status', 'open');
       $channel = ee()->TMPL->fetch_param('channel', '');
 
       $entries = ee()->lasting_impressions_entries->get();
+
       if(count($entries) > 0)
       {
         $this->parse_tag_data($entries, $status, $channel, $display_order);     
@@ -94,10 +96,6 @@ class Lasting_impressions extends Channel {
     }
   }
 
-
-
-
-	// ------------------------------------------------------------------------------
 
 
 
@@ -159,6 +157,28 @@ class Lasting_impressions extends Channel {
 
 
 
+  public function mostPopular() 
+  {
+    if ($this->enabled) {
+      // standard EE channel parameters
+      $status = ee()->TMPL->fetch_param('status', 'open');
+      $channel = ee()->TMPL->fetch_param('channel', '');
+      $limit = ee()->TMPL->fetch_param('limit', 100);
+      $popularEntries = ee()->lasting_impressions_entries->getMostPopular($limit); 
+
+      $display_order = '' ;
+
+      if(count($popularEntries) > 0)
+      {
+        $this->parse_tag_data($popularEntries, $status, $channel, $display_order);  
+        $popEntries = parent::entries();
+        return $popEntries;
+      }
+      return $this->return_no_results();       
+    }
+
+  }
+
 
   private function check_for_submit_buttons($submit_value, $use_html5)
   {
@@ -204,11 +224,11 @@ class Lasting_impressions extends Channel {
    $path = URL_THIRD_THEMES . LiConfig::getConfig()['package'] . '/js/';
    $line = '';			
    if (($load_jquery == "true") || ($load_jquery == "yes")) {
-    $line .= '<script type="text/javascript" src="' . $path . $this->jquery_file_name .'"></script>' . PHP_EOL;
+      $line .= '<script type="text/javascript" src="' . $path . $this->jquery_file_name .'"></script>' . PHP_EOL;
+    }
+    $line .= '<script type="text/javascript" src="' . $path . LiConfig::getConfig()['package'] . '.min.js"></script>' . PHP_EOL;
+    return $line;
   }
-  $line .= '<script type="text/javascript" src="' . $path . LiConfig::getConfig()['package'] . '.min.js"></script>' . PHP_EOL;
-  return $line;
-}
 }
 
 
@@ -246,6 +266,8 @@ public function count()    {
   private function parse_tag_data($entries, $status, $channel, $display_order)
   {
     $ordered_ids = implode("|", $this->get_entry_ids($entries, $display_order));
+    // var_dump($ordered_ids);
+    // die();
     ee()->TMPL->tagparams['entry_id'] = $ordered_ids;
     ee()->TMPL->tagparams['dynamic'] = 'no';
     ee()->TMPL->tagparams['status'] = $status;

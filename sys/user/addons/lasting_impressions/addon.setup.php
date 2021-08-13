@@ -14,7 +14,7 @@
 
 return array(
     'author'      => 'Climbing Turn',
-    'author_url'  => 'http://www.climbingturn.co.uk',
+    'author_url'  => 'https://www.climbingturn.co.uk',
     'name'        => 'Lasting Impressions',
     'description' => 'Record the entries viewed by each visitor to your site so that you can show the visitor what they last viewed.',
     'version'     => '4.0.2',
@@ -24,7 +24,18 @@ return array(
     'models' => array(
          'Settings' => 'Model\Settings',
          'Data' => 'Model\Data'
-    ) 
+    ),
+    'consent.requests' => [
+        'cache_views' => [
+            'title' => 'Your recently viewed items',
+            'request' => 
+            'We will anonymously save the ID of each item and the date viewed in a cookie so that you can keep track of the things you are interested in',
+            'request_format' => 'json'
+        ]
+        ],
+    'cookies.necessary' => [
+        'unique_id',
+    ] 
 
 );
 

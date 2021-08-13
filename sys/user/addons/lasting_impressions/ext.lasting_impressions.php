@@ -21,7 +21,7 @@ class Lasting_impressions_ext {
     var $version;
     var $description    = 'Records channel entries visited';
     var $settings_exist = 'y';
-    var $docs_url       = 'http://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions';
+    var $docs_url       = 'https://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions';
     var $settings       = array();
 
     /**

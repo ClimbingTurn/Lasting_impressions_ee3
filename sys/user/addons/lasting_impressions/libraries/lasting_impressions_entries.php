@@ -1,6 +1,11 @@
-<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+<?php 
+// namespace ClimbingTurn\LastingImpressions\libraries;
+
+if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 use ClimbingTurn\LastingImpressions\libraries\Config as LiConfig;
+use ClimbingTurn\LastingImpressions\libraries\DataHelper;
+
 /**
  * Lasting Impressions Entries Library
  *
@@ -64,6 +69,8 @@ class Lasting_impressions_entries {
     return $cookieset;
   }
 
+
+
   public function record($entry_id) {
     $ip_address = ee()->input->ip_address();
     $user_agent = ee()->input->user_agent();
@@ -92,6 +99,15 @@ class Lasting_impressions_entries {
   }
 
 
+  private function _get_data_from_table($limit = 0)
+  {
+    $data_helper = new DataHelper();
+    $stats = $data_helper->get_all_recorded_data(true, $limit);
+
+    return $stats;
+  }
+
+
 	// ------------------------------------------------------------------------------
 
 
@@ -101,22 +117,41 @@ class Lasting_impressions_entries {
     $entries = $this->_get_data_from_cookie();
 
     foreach ($entries as $key => $entry) 
-    {
-     if($entry['entry_id'] == $entry_id)	
-     {
-      unset($entries[$key]);
-      break;
+      {
+      if($entry['entry_id'] == $entry_id)	
+      {
+        unset($entries[$key]);
+        break;
+      }
     }
+
+    $cookieset = $this->_store_data_to_cookie($entries);
+    return $cookieset;
   }
 
-  $cookieset = $this->_store_data_to_cookie($entries);
-  return $cookieset;
-}
 
-
+  /**
+   * Get the list of entries from the visitor's cookie
+   *
+   * @return void
+   */
   public function get()
   {
     return $this->_get_data_from_cookie();
+  }
+
+
+  /**
+   * Get the most popular entries.  These are not specific to the person visiting the site
+   *
+   * @param int $limit maximum number of entries to return 
+   * @return void
+   */
+  public function getMostPopular($limit = 0)
+  {
+    $stats = $this->_get_data_from_table($limit);
+
+    return $stats;
   }
 
 
@@ -126,10 +161,10 @@ class Lasting_impressions_entries {
     * you wish to display any lasting impressions to the user
     */
    public function count()
-   {
-    $entries = $this->_get_data_from_cookie();
-    return count($entries);
-  }
+    {
+      $entries = $this->_get_data_from_cookie();
+      return count($entries);
+    }
 
 
 

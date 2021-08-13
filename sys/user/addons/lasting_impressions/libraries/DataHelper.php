@@ -1,7 +1,8 @@
 <?php
 namespace ClimbingTurn\LastingImpressions\Libraries;
 
-use EllisLab\ExpressionEngine\Library\CP\Table;
+// use EllisLab\ExpressionEngine\Library\CP\Table;
+use ExpressionEngine\Library\CP\Table;
 use ClimbingTurn\LastingImpressions\libraries\Config as LiConfig;
 
 /**
@@ -18,31 +19,64 @@ use ClimbingTurn\LastingImpressions\libraries\Config as LiConfig;
 class DataHelper {
     
     
-public function get_all_recorded_data($group_by) {
-          $query = $this->_get_lasting_impressions_data($group_by);
+public function get_all_recorded_data($group_by, $limit = 0) {
+          $query = $this->_get_lasting_impressions_data($group_by, $limit);
           if ($query->num_rows() > 0){
-              $data= $query->result_array();
-              return $data;
+	        $data= $query->result_array();
+                return $data;
           }
           return array();
   }
+
+
+  /**
+   * Get statistics on what entries have been viewed from the Lasting Impressions DB
+   *
+   * @param bool $group_by true if you want to group the output by number of views
+   * @param int $limit
+   * @return array
+   */
+  private function _get_lasting_impressions_data($group_by, $limit = 0){
+	$res = "";
+	if ($group_by) {
+		$sql = "select * FROM (
+			SELECT count(*) as num_views, d.entry_id as entry_id, t.title, t.site_id, t.channel_id " .
+			"FROM exp_lasting_impressions_data d " .
+			"inner join exp_channel_titles t " .
+			"on d.entry_id = t.entry_id " .
+			"group by d.entry_id
+			) as tmp_table order by tmp_table.num_views desc";
+		if ($limit > 0) {
+			$sql .= " limit " . $limit;
+		}
+		$res = ee()->db->query($sql);
+	} else {
+	ee()->db->select("d.entry_id, t.title,  t.site_id, t.channel_id, d.member_id, d.session_id, d.ip_address, d.user_agent, d.entry_date")
+			->from(LiConfig::getConfig()['data_table']  . ' d')
+			->join('channel_titles t', 'd.entry_id = t.entry_id', 'inner')
+			->order_by('d.entry_id');                   
+			$res = ee()->db->get();
+	}
+	return $res;
+}
+
   
-  private function _get_lasting_impressions_data($group_by){
-      if ($group_by) {
-          ee()->db->select("count(*) as num_views, d.entry_id, t.title, t.site_id, t.channel_id")
-              ->from(LiConfig::getConfig()['data_table']  . ' d')
-              ->join('channel_titles t', 'd.entry_id = t.entry_id', 'inner') 
-              ->group_by('d.entry_id')
-              ->order_by('num_views', 'DESC');
-      } else {
-      ee()->db->select("d.entry_id, t.title,  t.site_id, t.channel_id, d.member_id, d.session_id, d.ip_address, d.user_agent, d.entry_date")
-              ->from(LiConfig::getConfig()['data_table']  . ' d')
-              ->join('channel_titles t', 'd.entry_id = t.entry_id', 'inner')
-              ->order_by('d.entry_id');                   
-      }
-      $res = ee()->db->get();
-      return $res;
-  }
+//   private function _get_lasting_impressions_data($group_by){
+//       if ($group_by) {
+//           ee()->db->select("count(*) as num_views, d.entry_id, t.title, t.site_id, t.channel_id")
+//               ->from(LiConfig::getConfig()['data_table']  . ' d')
+//               ->join('channel_titles t', 'd.entry_id = t.entry_id', 'inner') 
+//               ->group_by('d.entry_id')
+//               ->order_by('num_views', 'DESC');
+//       } else {
+//       ee()->db->select("d.entry_id, t.title,  t.site_id, t.channel_id, d.member_id, d.session_id, d.ip_address, d.user_agent, d.entry_date")
+//               ->from(LiConfig::getConfig()['data_table']  . ' d')
+//               ->join('channel_titles t', 'd.entry_id = t.entry_id', 'inner')
+//               ->order_by('d.entry_id');                   
+//       }
+//       $res = ee()->db->get();
+//       return $res;
+//   }
   
   
   
@@ -103,12 +137,12 @@ public function get_all_recorded_data($group_by) {
   }
   
 public function create_totals_table( $limit=25, $current_page) {
-    $table = ee('CP/Table', array( 'sortable' => 'TRUE', 'autosort' => 'FALSE',  'limit' => $limit, 'page' => $current_page));
+    $table = ee('CP/Table', array( 'sortable' => 'TRUE',  'limit' => $limit, 'page' => $current_page));
     $table->setColumns(
         array(
                'num_views' => array(
                            'label' => 'Num Views',
-                           'sort' => 'false',
+                           'sort' => 'true',
                            'type' => 'Table::COL_TEXT'
                    ),
                 'entry_id' => array(

@@ -1,0 +1,12 @@
+{
+   "require-dev": {
+       "psr/container": "^1.1",
+       "mockery/mockery": "^1.4",
+       "phpunit/phpunit": "^9.5"
+   },
+   "autoload": {
+       "psr-4": {
+          "ClimbingTurn\\LastingImpressions\\": "../" 
+       }
+   }
+}
