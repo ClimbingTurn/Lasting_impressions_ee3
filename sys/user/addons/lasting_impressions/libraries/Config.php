@@ -26,7 +26,7 @@ namespace ClimbingTurn\LastingImpressions\Libraries;
                 'docs' =>  'https://www.climbingturn.co.uk/software/documentation/lasting-impressions-for-eecms',
 
                 //Versions below LASTING_IMPRESSIONS_HAS_DATATABLE_VERSION need the data table installed
-                'has_datatable_version' => '3.0.0'
+                'has_datatable_version' => '3.0.0',
          );
      }
  }

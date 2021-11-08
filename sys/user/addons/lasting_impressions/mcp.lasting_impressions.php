@@ -53,15 +53,17 @@ class Lasting_impressions_mcp {
     $this->_populate_view_furniture();
     $this->_load_packages();
 
-    if (isset($_POST['submit'])) {
+    if (isset($_POST['li-enabled'])) {
       $this->saveToDB();
     } else {
       $this->getSettingsFromDB();
     }
     $vars = $this->displaySettings();
     $vars[ 'package'] = LiConfig::getConfig()['package'];
-    return $this->_load_view("mcp_index", $vars, LiConfig::getConfig()['name'], lang('breadcrumb_settings'));
+    // return $this->_load_view("mcp_index", $vars, LiConfig::getConfig()['name'], lang('breadcrumb_settings'));
+    return ee('View')->make('ee:_shared/form')->render($vars);
   }
+  
   
   private function _load_view($view_name, $vars, $breadcrumb, $heading){
       return array(
@@ -90,16 +92,76 @@ class Lasting_impressions_mcp {
  /* ---------------- SETTINGS --------------------- */
 
   private function displaySettings() {
-    $view = 'index';
-    $vars = array(
-        'view' => $view,
-        'instructions' => lang('enable_to_edit'),
-        'docs' => LiConfig::getConfig()['docs'],
-        'partial_url' => $this->_mod_url, 
-        'settings' => $this->_settings
-        );
-    return $vars;
+    $docs = LiConfig::getConfig()['docs'];
+    // Form definition array
+    $vars['sections'] = array(
+      array(
+        // Enabled field
+        array(
+          'title' => lang('li_enabled'),
+          'fields' => array(
+              'li-enabled' => array(
+              'type' => 'yes_no',
+              'value' => $this->_settings['enabled'],
+              'choices' => array(
+                '1' => 'yes',
+                '0' => 'no'
+              )
+            )
+          )
+        ),
+        // Limit field
+        array(
+          'title' => lang('max_entries_title'),
+          'desc' => lang('max_entries_desc'),
+          'fields' => array(
+            'li-limit' => array(
+              'type' => 'text',
+              'value' => $this->_settings['limit'],
+              'maxlength' => 3
+            )
+          )
+        ),
+        // Expiration field
+        array(
+          'title' => lang('cookie_expiration_days'),
+          'desc' => lang('cookie_expiration_days_desc'),
+          'fields' => array(
+            'li-expires' => array(
+              'type' => 'text',
+              'value' => $this->_settings['expires'],
+              'maxlength' => 3
+            )
+          )
+        ),
+        // Documentation field LiConfig::getConfig()['docs']
+        array(
+          'title' => lang('lasting_impressions_module_name'),
+          'desc' => lang('find_docs_at'),
+          'fields' => array(
+            'li-expires' => array(
+              'type' => 'html',
+              'content' => '<a href="' . $docs .'">' . $docs . '</a>'
+            )
+          )
+        )        
+            
+      )
+    );
+
+    // Final view variables we need to render the form
+    $vars += array(
+      'base_url' => ee('CP/URL', 'addons/settings/lasting_impressions/index'),
+      'cp_page_title' => lang('enable_to_edit'),
+      'save_btn_text' => lang('save_btn_text'),
+      'save_btn_text_working' => 'btn_saving'
+    );
+
+  return $vars;
   }
+
+
+
 
 /* ---------------- REPORTS --------------------- */
 
@@ -212,7 +274,7 @@ class Lasting_impressions_mcp {
     if (isset($_POST['li-limit'])) {
       $limit = (int) $_POST['li-limit'];
       $expires = (int) $_POST['li-expires'];
-      $this->_settings['enabled'] = $_POST['li-enabled'];
+      $this->_settings['enabled'] = ($_POST['li-enabled'] == 'y' )? 1:0;
 
       if (is_int($limit)) {
         $this->_settings['limit'] = $limit;

@@ -20,7 +20,8 @@ class Lasting_impressions_upd  {
 	public $version;
 	private $class_name;
 	private $settings = array();
-        private $config;
+  // private $config;
+
 	
 	
 public function __construct() {
@@ -41,8 +42,8 @@ public function __construct() {
         ee()->logger->developer( LiConfig::getConfig()['name'] . ' installed = ' . $success);
         ee('CP/Alert')->makeStandard(lang('lasting_impressions_module_name'))
                                 ->asSuccess()
-                                ->withTitle(lang('lasting_impressions_install_sucess'))
-                                ->addToBody(lang('lasting_impressions_install_sucess'))
+                                ->withTitle(lang('lasting_impressions_install_success'))
+                                ->addToBody(lang('lasting_impressions_install_success'))
                                 ->now();
         return ($return_val);
     }
@@ -129,26 +130,32 @@ public function __construct() {
 	//------------ uninstall --------------------------
 	
     public function uninstall() {
-            $query = ee()->db->select('module_id')
-                    ->from('modules')
-                    ->where('module_name', $this->class_name)
-                    ->get();
+			$modGroupRoleTableName = 'module_member_roles';
+			if (version_compare(APP_VER, '6.0.0' , '<')) {
+				die("this is an old ee version");
+				$modGroupRoleTableName = 'module_member_groups';
+			} 
+			
+			$query = ee()->db->select('module_id')
+							->from('modules')
+							->where('module_name', $this->class_name)
+							->get();
 
-            $removed_mod_member = $this->_remove_refs('module_id', $query->row('module_id'), 'module_member_groups'); //remove from Module member groups
-            $removed_ref = $this->_remove_refs('module_name', $this->class_name, 'modules'); //remove from modules
-            $removed_li_table = $this->_remove_lastingimpressions_table();
-            $removed_li_data_table = $this->_remove_lastingimpressions_data_table();
-            $removed_action = $this->_remove_refs('class', $this->class_name, 'actions');
-            $uninstalled = $removed_mod_member && $removed_ref && $removed_li_table && 
-                    $removed_li_data_table && $removed_action;
-            ee()->logger->developer(LiConfig::getConfig()['name'] . ' uninstalled = ' . $uninstalled);
-             ee('CP/Alert')->makeStandard(lang('lasting_impressions_module_name'))
-                   ->asSuccess()
-                   ->withTitle(lang('lasting_impressions_uninstall_sucess'))
-                   ->addToBody(lang('lasting_impressions_uninstall_sucess'))
-                   ->now();
-            $return_val = ($uninstalled == 1)? TRUE: FALSE;
-            return ($return_val);
+			$removed_mod_member = $this->_remove_refs('module_id', $query->row('module_id'), $modGroupRoleTableName); //remove from Module member groups / roles
+			$removed_ref = $this->_remove_refs('module_name', $this->class_name, 'modules'); //remove from modules
+			$removed_li_table = $this->_remove_lastingimpressions_table();
+			$removed_li_data_table = $this->_remove_lastingimpressions_data_table();
+			$removed_action = $this->_remove_refs('class', $this->class_name, 'actions');
+			$uninstalled = $removed_mod_member && $removed_ref && $removed_li_table && 
+							$removed_li_data_table && $removed_action;
+			ee()->logger->developer(LiConfig::getConfig()['name'] . ' uninstalled = ' . $uninstalled);
+				ee('CP/Alert')->makeStandard(lang('lasting_impressions_module_name'))
+							->asSuccess()
+							->withTitle(lang('lasting_impressions_uninstall_success'))
+							->addToBody(lang('lasting_impressions_uninstall_success'))
+							->now();
+			$return_val = ($uninstalled == 1)? TRUE: FALSE;
+			return ($return_val);
     }
 	
 	
@@ -161,6 +168,8 @@ public function __construct() {
 		}
 		return true;
 	}
+
+
 	
 	private function _remove_lastingimpressions_table() {
 		ee()->load->dbforge();
@@ -183,6 +192,7 @@ public function __construct() {
 		return true;		
 	}
 	
+
 	//------------ update --------------------------
 	
 	public function update($current = '') 
@@ -207,6 +217,8 @@ public function __construct() {
 
 		return TRUE;
 	}
+
+
 	
 	private function _update_version_in_modules_table()
 	{
