@@ -17,7 +17,7 @@ return array(
     'author_url'  => 'https://www.climbingturn.co.uk',
     'name'        => 'Lasting Impressions',
     'description' => 'Record the entries viewed by each visitor to your site so that you can show the visitor what they last viewed.',
-    'version'     => '4.1.0',
+    'version'     => '4.1.1',
     'namespace'   => 'ClimbingTurn\LastingImpressions',
     'docs_url'    => 'https://www.climbingturn.co.uk/software/documentation/lasting-impressions-for-eecms',
     'settings_exist' => TRUE,
