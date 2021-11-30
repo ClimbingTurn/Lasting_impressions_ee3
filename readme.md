@@ -12,12 +12,12 @@ This add-on logs of the dates, times and number of views of each tracked entry w
 
 The full use guide can be found here: 
 
-[Lasting Impression for EE3 User Guide](https://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions-for-eecms-v3)
+[Lasting Impression for EE3+ User Guide](https://www.climbingturn.co.uk/software/documentation/lasting-impressions-for-eecms)
 
 ##Compatibility
 Compatible with EE versions	3, 4, 5 and 6
 
-Lasting Impressions Version	4.0.2
+Lasting Impressions Version	4.2.0
 
 
 ##Upgrading templates from version 2

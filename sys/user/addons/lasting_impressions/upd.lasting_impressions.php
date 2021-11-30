@@ -197,16 +197,15 @@ public function __construct() {
 	
 	public function update($current = '') 
 	{	
-		if (! version_compare($current, $this->version, '='))
+		if (version_compare($current, $this->version, '=='))
 		{
 			return FALSE;
-		} elseif ((defined(LiConfig::getConfig()['has_datatable_version']) == false) ||
-		   version_compare($current, LiConfig::getConfig()['has_datatable_version']) >= 0 ) {
+		} elseif ((isset(LiConfig::getConfig()['has_datatable_version']) == false) ||
+		   version_compare($current, LiConfig::getConfig()['has_datatable_version'], "<" ) ) {
 			//LiConfig::getConfig()['has_datatable_version'] is the version where we started using the data table, any versions beyond this will already have that table installed
-			$data_created = true;
-
-		} else {
 			$data_created = $this->_create_lastingimpressions_data_table();
+		} else {
+			$data_created = true;
 		}
 
 		if ($data_created) {

@@ -4,20 +4,24 @@
  * @package     lasting_impressions
  * @author      Dorothy Molloy / Anthony Mellor
  * @link 		https://www.climbingturn.co.uk/software/ee-add-ons/lasting-impressions-for-eecms-v3
- * @copyright 	Copyright (c) 2019, Climbing Turn Ltd
+ * @copyright 	Copyright (c) 2021, Climbing Turn Ltd
  *
  *  This file is part of lasting_impressions.
  *	Requires ExpressionEngine 3.0.0 or above
- *  ExpressionEngine 4 compliant
+ *  ExpressionEngine 6 compliant
  */
 
+
+ //  Make sure that the version number is updated in config.php
+use ClimbingTurn\LastingImpressions\libraries\Config as LiConfig;
+require_once __DIR__ . '/libraries/Config.php';
 
 return array(
     'author'      => 'Climbing Turn',
     'author_url'  => 'https://www.climbingturn.co.uk',
     'name'        => 'Lasting Impressions',
     'description' => 'Record the entries viewed by each visitor to your site so that you can show the visitor what they last viewed.',
-    'version'     => '4.1.1',
+    'version'     => LiConfig::getConfig()['version'],
     'namespace'   => 'ClimbingTurn\LastingImpressions',
     'docs_url'    => 'https://www.climbingturn.co.uk/software/documentation/lasting-impressions-for-eecms',
     'settings_exist' => TRUE,
